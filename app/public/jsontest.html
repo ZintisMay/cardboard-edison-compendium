@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	</head>
+	<body>
+
+	<button id="tim">a</button>
+
+	<p id="bob"></p>
+
+		<script type="text/javascript">
+			
+		$("#tim").click(function(){
+			console.log('click');
+			$.ajax({
+				url: "/api/data",
+				success: function(result){
+
+					$("#bob").html(result);
+
+					console.log(result);
+				}
+			});
+		});
+
+
+
+
+		</script>
+	</body>
+</html>

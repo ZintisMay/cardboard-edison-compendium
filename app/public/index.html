@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="CElogin">
+<head>
+	<title></title>
+
+	<!-- wy jquery? -->
+	<script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+
+	<!-- Lodash -->
+	<script src = "https://cdn.jsdelivr.net/lodash/4.15.0/lodash.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<style>
+	.overlay{
+		position:absolute;
+		z-index: 3;
+
+	}
+</style>
+</head>
+<body  ng-controller="MainCTRL">
+<div class="overlay">
+	<!-- <a href="/CEangularTable">CEangularTable</a> -->
+	<!-- <a href="/CEangularNewCompany">New Company</a> -->
+	<a href="/Table">TABLE</a>
+	<!-- <a href="/NewPublisher">NewPublisher</a> -->
+	<a href="/PublisherEditor">PublisherEditor</a>
+	<!-- <a href="/Table3">TABLE3</a> -->
+	<a href="/MasterEditor">MasterEditor</a>
+</div>
+<div class="container-fluid">
+
+	<div class="col col-lg-3"></div>
+
+	<div class="col col-lg-6">
+
+		<div class="panel panel-default">
+
+			<div class="panel panel-heading">
+				<h1>Welcome to the Compendium</h1>
+			</div>
+
+			<div class="panel panel-body">
+
+				<h3>Please enter your username and password</h3>
+				<input ng-model="userInput.userName" placeholder="User Name">
+				<input ng-model="userInput.userPass" placeholder="Password">
+				<div class="btn btn-primary" ng-click="login(userInput)">Login</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<div class="col col-lg-3"></div>
+</div>
+<script type="text/javascript">
+
+	angular.module('CElogin', []).controller("MainCTRL", function($scope,$location,$http){
+		
+		$scope.userInput = {
+			userName: "z",
+			userPass: "Designer16"
+		}
+
+		$scope.login = function(PassObject){
+			
+			console.log(PassObject);
+			$http.post("/testEnd", PassObject).then(function(response) {
+				$location.path('/jsontest');
+	    		console.log("response.data", response.data);
+
+    		});
+		}
+
+	});
+
+</script>
+
+
+</body>
+</html>

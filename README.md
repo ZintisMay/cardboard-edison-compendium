@@ -1,1 +1,1 @@
-# cardboard-edison-publisher-directory
+# cardboard-edison-db

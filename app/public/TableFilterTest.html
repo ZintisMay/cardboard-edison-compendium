@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html ng-app="CETABLE">
+<head>
+	<title>
+		
+
+	</title>
+
+	<!-- wy jquery? -->
+	<script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+
+	<!-- Lodash -->
+	<script src = "https://cdn.jsdelivr.net/lodash/4.15.0/lodash.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+	<!-- //style -->
+	<style type="text/css">
+
+	td{
+		padding:5px;
+		cursor:pointer;
+	}
+	table{
+		overflow:scroll;
+	}
+	.smallBox{
+		height:100px;
+		width:100px;
+	}
+	.hidden{
+		display:hidden;
+	}
+
+	.removalButtons{
+		margin:2px;
+		font-size:15;
+		float:left;
+
+
+	}
+	.titleButtons, .removalButtons{
+		border-style:solid;
+		border-width:2px;
+		border-color:black;
+
+	}
+		
+	.glyphicon-remove{
+		color:red;
+		cursor:pointer;
+	}
+
+	.titleButtons{
+		font-size:10px;
+
+		margin:0px;
+	}
+
+	.thickButton{
+		padding-top: 3px;
+		padding-bottom: 3px;
+		font-size:20px;
+	}
+
+	.thinButton{
+		padding-top: 0px;
+		padding-bottom: 0px;
+
+	}
+	.bc-gray{
+		background-color: #eaeaea;
+	}
+	a{
+		word-break:break-all;
+	}
+	.titleDiv{
+		height:8%;
+	}
+	.loadingGIF{
+		width:10%;
+		position:absolute;
+		top:45%;
+		/*bottom:50%;*/
+		left:45%;
+		/*right:50%;*/
+	}
+	.bannerImage{
+		height:8%;
+		width:100%;
+		z-index: -1;
+		position:absolute;
+		background-size: cover;
+		background-image: url("banner.png");
+		opacity:.5;
+	}
+
+	.compendium{
+		vertical-align: center;
+		padding:0px;
+		margin:0px;
+		color:black;
+		font-family:times;
+		text-shadow: 1px 1px 0px black; /* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
+
+	}
+	.compendium, .compendiumInput{
+		float:left;
+	}
+	input{
+		margin:1%;
+		/*bottom:10%;*/
+		vertical-align:middle;
+
+	}
+	.littleArrowButton{
+		margin:0px;
+		padding:0px;
+	}
+	@media only screen and (min-width: 731px){
+		.rightAlign{
+			text-align:right
+		}
+		.leftAlign{
+			text-align:left
+		}
+	}
+
+	@media only screen and (max-width:730px){
+		.rightAlign, .leftAlign{
+			text-align:center;
+		}
+		.bannerImage{
+		height:16%;
+		}
+	}
+	</style>
+
+
+</head>
+<!-- controller blinds certain code to this section of the DOM -->
+<body ng-controller="MainCTRL">
+<img src="loading.gif" class="loadingGIF" ng-if="loading">
+
+<div class="bannerImage"></div>
+
+	<div class="container-fluid">
+
+		<div class="row">
+
+			
+
+			<!-- <button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button> -->
+
+			<!-- <button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button> -->
+
+			<!-- <button ng-click="getJSON()" class="btn btn-primary">getJSON</button> -->
+
+			<!-- <button ng-click="pushJSON()" class="btn btn-primary">pushJSON</button> -->
+
+			<!-- <button ng-click="dbGetData()" class="btn btn-primary">dbGetData</button> -->
+
+			<div class="col-sm-12 titleDiv">
+				<h1 class="compendium">The Compendium</h1>
+				<input class="compendiumInput" ng-model="searchKeyWord" placeholder="Search Table..."></input>
+				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button>
+
+			</div>
+
+		</div>	
+
+		<div class="row">
+			
+			<table class="table table-inverse">
+
+				<thead>
+					<tr>
+						<td ng-repeat="(key, val) in CEdataArray[0]" class="{{key}}" ng-if="evaluateRemCol(key)">
+
+								<button class="btn titleButtons thickButton btn-block" ng-click="changeSortType(key); arrowObject.increment(key)">{{key}}
+
+									<span  
+									style="position:relative;left:0px;" 
+									ng-class="arrowObject.classes[arrowObject[key]]" 
+									class="glyphicon"/>
+									</span>
+
+								</button>
+
+
+								<!-- <button class="btn btn-danger titleButtons thinButton btn-block" ng-click="removeThisColumn(key)">X</button> -->
+						</td>
+
+					</tr>
+				</thead>
+
+				<tbody>
+ 
+					<tr ng-repeat="
+					x in CEdataArray | 
+					filter:searchKeyWord | 
+					orderBy:sortType:sortReverse" 
+					ng-click="assignModalData(CEdataArray.indexOf(x))" 
+					data-toggle="modal" 
+					data-target="#myModal" 
+					ng-class-even="'bc-gray'">
+
+						<td ng-repeat="(key, val) in x" ng-if="evaluateRemCol(key)">
+							<a ng-href="{{val}}" ng-if="evaluateHREF(val)">{{val}}</a>
+							<div ng-if="!evaluateHREF(val)">
+								<p ng-if="!evaluateArray(val)">{{val}}</p>
+								<!-- <ul ng-if="evaluateArray(val)" ng-repeat="k in val">{{k}}</ul> -->
+							</div>
+						</td>
+<!-- 
+						<td class="Publisher_Name">{{x.Publisher_Name}}</td>
+
+						<td class="Accepting_Submissions">{{x.Accepting_Submissions}}</td>
+
+						<td class="Catalog_Size">{{x.Catalog_Size}}</td>
+						
+						<td class="Representative_Games">
+							<ul>
+								<li ng-repeat="y in x.Representative_Games">{{y}}</li>
+							</ul>
+						</td>
+
+						<td class="Interested_In">{{x.Interested_In}}</td>
+
+						<td class="Categories_of_Interest">
+
+							<ul>
+								<li ng-repeat="y in x.Categories_of_Interest">{{y}}</li>
+							</ul>
+
+						</td>
+
+						<td class="Country">{{x.Country}}</td>
+
+						<td class="Method_of_Contact">
+							<h5 ng-repeat="y in x.Method_of_Contact">{{y}}</h5>
+						</td>
+
+						<td class="Publisher_Website">{{x.Publisher_Website}}</td>
+
+						<td class="BoardGameGeek_Page">{{x.BoardGameGeek_Page}}</td>
+
+						<td class="Contact_Info">{{x.Contact_Info}}</td>
+
+						<td class="Planned_Use_of_Kickstarter">{{x.Planned_Use_of_Kickstarter}}</td>
+
+						<td class="Profile_Updated_On">{{x.Profile_Updated_On}}</td> -->
+
+					</tr>
+
+				</tbody>
+			</table>
+
+		</div>
+	
+	</div>
+
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="">
+
+		<div class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+
+<!-- 				<div class="modal-header">
+					{{selectedDummyData.Publisher}}
+				</div> -->
+
+				<div class="modal-body">
+					<ul ng-repeat="(key, val) in selectedDummyData " style="text-align:center;" ng-if = "evaluateIdPub(key)">
+						<div>
+							<div class="col-sm-4 sometimesCentered rightAlign" style=";">
+								<p><strong>{{key}}:</strong></p>
+							</div>
+							<div class="col-sm-8 sometimesCentered leftAlign" style=";">
+
+								<p><a ng-href="{{val}}" ng-if="evaluateHREF(val)">{{val}}</a>
+								<span ng-if="!evaluateHREF(val)">{{val}}</span></p>
+							</div>
+						</div>
+					</ul>
+
+
+
+<!-- 						<p><strong></strong>{{selectedDummyData.Publisher_Name}}</p>
+						<p><strong>Accepting_Submissions: </strong>{{selectedDummyData.Accepting_Submissions}}</p>
+						<p><strong>Catalog_Size: </strong>{{selectedDummyData.Catalog_Size}}</p>
+						<p><strong>Representative_Games: </strong>{{selectedDummyData.Representative_Games}}</p>
+						<p><strong>Interested_In: </strong>{{selectedDummyData.Interested_In}}</p>
+						<p><strong>Categories_of_Interest: </strong>{{selectedDummyData.Categories_of_Interest}}</p>
+						<p><strong>Country: </strong>{{selectedDummyData.Country}}</p>
+						<p><strong>Method_of_Contact: </strong>{{selectedDummyData.Method_of_Contact}}</p>
+						<p><strong>Publisher_Website: </strong></p>{{selectedDummyData.Publisher_Website}}
+						<p><strong>BoardGameGeek_Page: </strong>{{selectedDummyData.BoardGameGeek_Page}}</p>
+						<p><strong>Contact_Info: </strong>{{selectedDummyData.Contact_Info}}</p>
+						<p><strong>Planned_Use_of_Kickstarter: </strong>{{selectedDummyData.Planned_Use_of_Kickstarter}}</p>
+						<p><strong>Profile_Updated_On: </strong>{{selectedDummyData.Profile_Updated_On}}</p> -->
+
+
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Exit</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script type="text/javascript">
+		
+	//initializes the module, and then controller
+	angular.module('CETABLE', []).controller("MainCTRL", function($scope, $http){
+
+/////////////////////////////////////////////////////////////////////////////////////
+		var colorToggle = false;
+
+		$scope.arrowObject = {
+			increment : function(key){
+				this[key]++;
+				if(this[key]==3){
+					this[key]=0;
+				}
+			},
+			classes : ['glyphicon-sort', 'glyphicon-arrow-up','glyphicon-arrow-down']
+		};
+
+		$scope.evaluateColor = function(){
+			if(colorToggle == false) {colorToggle = true}else{  colorToggle = false;}
+			return colorToggle;
+		}
+
+		$scope.evaluateIdPub = function(a){
+			if(a == "idPublisherDirectory" ){
+				return false
+			}else{ 
+				return true;
+			}
+		}
+		$scope.evaluateArray = function(a){
+			if(typeof a == "array"){
+				return true
+			}else{ 
+				return false;
+			}
+		}
+
+		$scope.evaluateHREF = function(a){
+			var http = "http://";
+			for(x=0;x<http.length;x++){
+				if(http[x] != a[x]){
+					return false;
+				}
+			}
+			return true;
+		}
+
+		$scope.evaluateRemCol = function(a){
+			if($scope.removedColumns.indexOf(a) == -1 && a != "idPublisherDirectory" && a != "Viewable"){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		$scope.removeThisColumn = function(a){
+			$scope.removedColumns.push(a);
+			console.log($scope.removedColumns);
+		}
+		$scope.returnThisColumn = function(a){
+			$scope.removedColumns.splice($scope.removedColumns.indexOf(a), 1);
+			console.log($scope.removedColumns);
+		}
+
+		// var CEDATA = {};
+
+		// $scope.getJSON = function(){
+		// 	$.ajax({
+		// 		url: "/api/data",
+		// 		success: function(result){
+		// 			// console.log(result);
+		// 			CEDATA = result;
+		// 			console.log(CEDATA);
+		// 		}
+		// 	});
+		// }
+
+		$scope.CEdataArray = [];
+
+		//this will pull the json data from the local json file++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		$scope.localJSON = {};
+
+	    $http.get("/api/data").then(function(response) {
+	    	$scope.localJSON = response.data.Publisher_Data_Input_Form;
+	    	// console.log('response', response);
+	    	console.log('$scope.localJSON', $scope.localJSON);
+	    });
+	    
+	    //deactivates the gif
+	    $scope.loading = true;
+	    //this will return all the db data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	    $scope.dbGetData = function(){
+
+	    	console.log("dbgetdata");
+
+		    $http.get("/api/returnDB").then(function(response) {
+		    	// console.log(response);
+				response.data.forEach(function(x){
+					 // console.log(x);
+
+					 //sorting functions========================================================================
+
+					 // x.Categories_of_Interest = x.Categories_of_Interest.replace("[", "").replace("]", "").replace(/games/g, "").split(", ");
+					 // x.Representative_Games = x.Representative_Games.split("\n");
+					 // x.Method_of_Contact = x.Method_of_Contact.replace("[", "").replace("]", "").split(", ");
+
+					 // x.Publisher_Website = x.Publisher_Website.replace("<a href= \"", "").splice(, "");
+					 // console.log(x.Categories_of_Interest);
+	 				$scope.CEdataArray = response.data;
+					// removeKey(idPublisherDirectory);
+					// console.log("$scope.CEdataArray", $scope.CEdataArray);
+					$scope.MasterData = $scope.CEdataArray;
+				});
+
+				for (var key in $scope.MasterData[0]){
+					$scope.arrowObject[key] = 0;
+				}
+
+				$scope.loading = false;
+				console.log('MasterData', $scope.MasterData);
+				console.log('arrowObject', $scope.arrowObject);
+			});
+
+	    }
+	    //IMMEDIATE CALL++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	    $scope.dbGetData();
+
+
+
+	    //this will dump all the data into mysql++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	    $scope.populateDBdata = [];
+
+	    // $http.post("/api/populateDB", populateDBdata).then(function(response){
+	    // 	console.log(response);
+	    // });
+
+	    //this is the one and done function to fix the data form, these are unused--------------------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------------------------------------------
+	    $scope.getJSON = function(){
+		   $http.get("/api/data").then(function(response){
+	    		var tempResponse = response.data.Publisher_Data_Input_Form;
+	    			var biggestRep = 0;
+	    			var biggestInt = 0;	    		
+	    		console.log($scope.populateDBdata);
+
+	    		tempResponse.forEach(function(x){
+
+	    			x.Submissions = x.Accepting_Submissions;
+
+	    			delete x.Accepting_Submissions;
+
+	    			x.BGGpage = x.BoardGameGeek_Page.replace("<a href= \"", "").replace(/\"(.*)/, "");
+
+	    			delete x.BoardGameGeek_Page;
+
+	    			x.CatalogSize = x.Catalog_Size.replace("published games", "").replace(/ /g, "").replace(/-(.*)/, ""). replace("or more", "");
+
+	    			delete x.Catalog_Size;
+
+	    			x.CategoriesOfInterest = x.Categories_of_Interest.replace("[", "").replace("]", "").replace(/ games/g, "");
+
+	    			delete x.Categories_of_Interest;
+
+	    			x.ContactInfo = x.Contact_Info;
+
+	    			delete x.Contact_Info;
+
+	    			// x.Country = x.Country;
+
+	    			// delete x.Country;
+
+	    			x.InterestedIn = x.Interested_In;
+
+	    			delete x.Interested_In;
+
+	    			x.ContactMethod = x.Method_of_Contact.replace("[", "").replace("]", "");
+
+	    			delete x.Method_of_Contact;
+
+	    			x.Kickstarter = x.Planned_Use_of_Kickstarter;
+
+	    			delete x.Planned_Use_of_Kickstarter;
+
+	    			x.RecentlyUpdated = x.Profile_Updated_On;
+
+	    			delete x.Profile_Updated_On;
+
+	    			x.PublisherName = x.Publisher_Name;
+
+	    			delete x.Publisher_Name;
+
+	    			x.Website = x.Publisher_Website.replace("<a href= \"", "").replace(/\"(.*)/, "");
+
+	    			delete x.Publisher_Website;
+
+	    			x.RepresentativeGames = x.Representative_Games;
+
+	    			delete x.Representative_Games;
+
+	    			x.PubPassword = "Zintis11484"
+
+
+
+	    			Object.keys(x).forEach(function(key){
+	    				console.log(key);
+	    				if(x[key] === "" || x[key] == null){
+	    					x[key] = "BLANK";
+	    				}
+	    				if(x[key].length > 120){console.log(x[key].length, key,"+++++++++",  x[key]);}
+	    				if(key == "RepresentativeGames" && x[key].length > biggestRep){biggestRep = x[key].length;}
+    					if(key == "InterestedIn" && x[key].length > biggestInt){biggestInt = x[key].length;}
+	    			});
+	    			
+	    		});
+
+			console.log(biggestInt, biggestRep);
+
+	    		$scope.populateDBdata = tempResponse;
+	    		$scope.CEdataArray = tempResponse;
+	    	});
+	    }
+
+    	var JSONcounter = 0;
+
+	    $scope.pushJSON = function(){
+	    	// $scope.populateDBdata.length
+	    	if (JSONcounter == $scope.populateDBdata.length){ JSONcounter = 0; return false;}
+
+	        $http.post("/api/populateDB", $scope.populateDBdata[JSONcounter]).then(function(response){
+	        	console.log($scope.populateDBdata[JSONcounter]);
+	    		console.log(response);
+	    		JSONcounter++;
+	    		$scope.pushJSON();
+	    	});
+	    }
+	    //this is the one and done function to fix the data form--------------------------------------------------------------------------------------
+		// ---------------------------------------------------------------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+		//list of columns temporarily removed
+		$scope.removedColumns = [];
+		$scope.removedObjectContents = {};
+
+		//this removes the key from all objects and puts them into a temporary removedObjectContents array
+		function removeKey(keyname){
+			//make an array with that keyname
+			$scope.removedObjectContents[keyname] = [];
+			//iterate over the data
+			for(x=0;x<$scope.CEdataArray.length;x++){
+				//take the xth data keyname value and push into the temp array
+				$scope.removedObjectContents[keyname].push($scope.CEdataArray[x][keyname]);
+				//remove that item from the object
+				delete $scope.CEdataArray[x][keyname];
+			}
+			// console.log($scope.removedObjectContents);
+			// console.log($scope.dummyData);
+		}
+
+		//this returns all contents from the removedObjectsContetns array to their respective objects
+		function addKey(keyname){
+
+			//iterate over all dummy data
+			for(x=0;x<$scope.CEdataArray.length;x++){
+				// console.log($scope.removedObjectContents[keyname][x]);
+
+				//return to dummydaya 0, that keyname, the value that was stored under that keyname
+				$scope.CEdataArray[x][keyname] = $scope.removedObjectContents[keyname][x];
+			}
+			//remove the temporary object key
+			delete $scope.removedObjectContents[keyname];
+			// console.log($scope.removedObjectContents);
+			// console.log($scope.dummyData);
+		}
+
+		//makes things hidden
+		function removeColumnView(x){
+			// $('.' + x).addClass("hidden");
+			// $scope.removedColumns.push(x);
+			// removeKey(x);
+		}
+
+		//reveals hidden things
+		function returnColumnView(x){
+			// $scope.removedColumns.splice($scope.removedColumns.indexOf(x), 1);
+			// $('.' + x).removeClass("hidden");
+			// console.log($scope.removedColumns);
+			// addKey(x);
+		}
+
+		$scope.returnColumnView = returnColumnView;
+		$scope.removeColumnView = removeColumnView;
+
+
+		//reorders the sorting
+		$scope.changeSortType = function (x){
+
+			if($scope.sortType == x && $scope.sortReverse == false){
+
+				$scope.sortReverse = true;
+				console.log('now true');
+
+			}else if ($scope.sortType == x && $scope.sortReverse == true){
+
+				$scope.sortReverse = false;
+				console.log('now false');
+
+			}else{
+				$scope.sortReverse = false;
+				console.log('doublefalse');
+			}
+
+			$scope.sortType = x;
+		}
+
+		//default sort
+		$scope.sortType = "Publisher";
+		$scope.sortReverse = false;
+
+
+		//very important search var
+		$scope.searchKeyWord = "";
+		$scope.searchKeyWord2 = "";
+		$scope.searchKeyWord3 = "";
+		$scope.sortOrder = null;
+		$scope.filterType = null;
+
+		// $scope.sortByThis = null;
+
+		//needed for modal toggle?
+		$scope.started = true;
+
+
+		$scope.inputfield = "";
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+
+		// $scope.MasterData = _.cloneDeep($scope.dummyData);
+		// console.log($scope.MasterData);
+		//modal array and helper
+
+		// $scope.selectedDummyData = {};
+	
+		$scope.assignModalData = function(x){
+			$scope.selectedDummyData = $scope.CEdataArray[x];
+			console.log($scope.selectedDummyData);
+
+		}
+
+		// click button functions
+
+		function toggle(x){
+			if($scope.started == true){
+				$scope.started = false;
+			}else if ($scope.started == false){
+				$scope.started = true;
+			}
+			console.log("toggle");
+			console.log($scope.started);
+		}
+
+		function showMe(){
+			console.log($scope.dummyData);
+			toggle($scope.started);
+		}
+		$scope.showMe = showMe;
+	
+	});
+
+
+
+
+
+	</script>
+
+</body>
+</html>

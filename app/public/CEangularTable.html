@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html ng-app="CETABLE">
+<head>
+	<title>
+		
+
+	</title>
+
+	<!-- wy jquery? -->
+	<script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+
+	<!-- Lodash -->
+	<script src = "https://cdn.jsdelivr.net/lodash/4.15.0/lodash.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+	<!-- //style -->
+	<style type="text/css">
+
+	td{
+		padding:5px;
+		cursor:pointer;
+	}
+	table{
+		overflow:scroll;
+	}
+	.smallBox{
+		height:100px;
+		width:100px;
+	}
+	.hidden{
+		display:hidden;
+	}
+	.removalButtons{
+		margin:3px;
+	}
+	.glyphicon-remove{
+		color:red;
+		cursor:pointer;
+	}
+	.titleButtons{
+		font-size:10px;
+	}
+	</style>
+
+
+</head>
+<!-- controller blinds certain code to this section of the DOM -->
+<body ng-controller="MainCTRL">
+
+	<div class="container-fluid">
+
+		<div class="row">
+
+			<button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button>
+
+			<button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button>
+
+			<button ng-click="getJSON()" class="btn btn-primary">JSON</button>
+
+			<input ng-model="searchKeyWord" placeholder="Search Table..."></input>
+			
+			<button class="removalButtons btn btn-warning" ng-repeat="x in removedColumns" ng-click="returnColumnView(x)">{{x}}</button>
+
+		</div>	
+
+		<div class="row">
+			
+			<table class="table table-inverse">
+
+				<thead>
+					<tr>
+						<td ng-repeat="(key, val) in sampleData" class="{{key}}">
+						<div class="btn-group" role="group" aria-label="...">
+							<button class="btn titleButtons" ng-click="changeSortType(key)">{{key}}</button>
+							<button class="btn btn-danger titleButtons" ng-click="removeColumnView(key)">X</button>
+						</div>
+						</td>
+
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr ng-repeat="x in sampleDataArray | filter:searchKeyWord | orderBy:sortType:sortReverse" ng-click="assignSelectedDummyData(sampleDataArray.indexOf(x))" data-toggle="modal" data-target="#myModal">
+		<!-- 					
+						<td ng-repeat="(key,val) in x">
+
+							<span>{{val}}</span>
+
+						</td> -->
+
+						<td class="Publisher_Name">{{x.Publisher_Name}}</td>
+
+						<td class="Publisher_Website">{{x.Publisher_Website}}</td>
+						
+						<td class="Representative_Games">{{Representative_Games}}</td>
+
+						<td class="Categories_of_Interest">
+							<h5 ng-repeat="y in x.Categories_of_Interest">{{y}}</h5>
+						</td>
+
+						<td class="Method_of_Contact">
+							<h5 ng-repeat="y in x.Method_of_Contact">{{y}}</h5>
+						</td>
+
+						<td class="Catalog_Size">{{x.Catalog_Size}}</td>
+
+						<td class="Accepting_Submissions">{{x.Accepting_Submissions}}</td>
+
+						<td class="Country">{{x.Country}}</td>
+
+						<td class="pic"><img class="smallBox" src="{{x.pic}}"></td>
+
+						<td class="BoardGameGeek_Page">{{x.BoardGameGeek_Page}}</td>
+
+						<td class="Contact_Info">{{x.Contact_Info}}</td>
+
+						<td class="Interested_In">{{x.Interested_In}}</td>
+
+						<td class="Planned_Use_of_Kickstarter">{{x.Planned_Use_of_Kickstarter}}</td>
+
+						<td class="Representative_Games">{{x.Representative_Games}}</td>
+
+						<td class="Profile_Updated_On">{{x.Profile_Updated_On}}</td>
+
+					
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	
+	</div>
+
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+
+				<div class="modal-header">
+					{{selectedDummyData.Publisher}}
+				</div>
+
+				<div class="modal-body">
+					<ul ng-repeat="(key, value) in selectedDummyData">
+						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
+					</ul>
+				</div>
+
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Exit</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- {console.log($scope.bookmarks)} -->
+
+
+
+	<script type="text/javascript">
+		
+	//initializes the module, and then controller
+	angular.module('CETABLE', []).controller("MainCTRL", function($scope){
+
+/////////////////////////////////////////////////////////////////////////////////////
+		var CEDATA = {};
+
+		function getJSON(){
+			$.ajax({
+				url: "/api/data",
+				success: function(result){
+					// console.log(result);
+					CEDATA = result;
+					console.log(CEDATA);
+				}
+			});
+		}
+
+		$scope.getJSON = getJSON;
+		$scope.CEJSON = CEDATA;
+
+		$.ajax({
+			url: "/api/data",
+			success: function(result){
+				// console.log(result);
+				CEDATA = result;
+				console.log(CEDATA);
+			}
+		});
+
+		$scope.getJSON = getJSON;
+		// $scope.CEJSON = CEDATA;
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+		//list of columns temporarily removed
+		$scope.removedColumns = [];
+		$scope.removedObjectContents = {};
+
+		//this removes the key from all objects and puts them into a temporary removedObjectContents array
+		function removeKey(keyname){
+			//make an array with that keyname
+			$scope.removedObjectContents[keyname] = [];
+			//iterate over the data
+			for(x=0;x<$scope.dummyData.length;x++){
+				//take the xth data keyname value and push into the temp array
+				$scope.removedObjectContents[keyname].push($scope.dummyData[x][keyname]);
+				//remove that item from the object
+				delete $scope.dummyData[x][keyname];
+			}
+			// console.log($scope.removedObjectContents);
+			// console.log($scope.dummyData);
+		}
+
+		//this returns all contents from the removedObjectsContetns array to their respective objects
+		function addKey(keyname){
+
+			//iterate over all dummy data
+			for(x=0;x<$scope.dummyData.length;x++){
+				// console.log($scope.removedObjectContents[keyname][x]);
+
+				//return to dummydaya 0, that keyname, the value that was stored under that keyname
+				$scope.dummyData[x][keyname] = $scope.removedObjectContents[keyname][x];
+			}
+			//remove the temporary object key
+			delete $scope.removedObjectContents[keyname];
+			// console.log($scope.removedObjectContents);
+			// console.log($scope.dummyData);
+		}
+
+		//makes things hidden
+		function removeColumnView(x){
+			$('.' + x).addClass("hidden");
+			$scope.removedColumns.push(x);
+			removeKey(x);
+		}
+
+		//reveals hidden things
+		function returnColumnView(x){
+			$scope.removedColumns.splice($scope.removedColumns.indexOf(x), 1);
+			$('.' + x).removeClass("hidden");
+			console.log($scope.removedColumns);
+			addKey(x);
+		}
+
+		$scope.returnColumnView = returnColumnView;
+		$scope.removeColumnView = removeColumnView;
+
+
+		//reorders the sorting
+		function changeSortType(x){
+
+			if($scope.sortType == x && $scope.sortReverse == false){
+
+				$scope.sortReverse = true;
+				console.log('now true');
+
+			}else if ($scope.sortType == x && $scope.sortReverse == true){
+
+				$scope.sortReverse = false;
+				console.log('now false');
+
+			}else{
+				$scope.sortReverse = false;
+				console.log('doublefalse');
+			}
+
+			$scope.sortType = x;
+		}
+		$scope.changeSortType = changeSortType;
+
+		//default sort
+		$scope.sortType = "Publisher";
+		$scope.sortReverse = false;
+
+
+		//very important search var
+		$scope.searchKeyWord = "";
+		$scope.sortOrder = null;
+		$scope.filterType = null;
+
+		// $scope.sortByThis = null;
+
+		//needed for modal toggle?
+		$scope.started = true;
+
+
+		$scope.inputfield = "";
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		$scope.sampleData = {
+				Publisher_Name: "Zin", 
+				Accepting_Submissions: "Yes", 
+				BoardGameGeek_Page: "http://www.bob.com",
+				Catalog_Size: 1,
+				Categories_of_Interest: ["Dice", "Card"],
+				Contact_Info: "zintis@zintis.com",
+				Country:"USA",
+				Interested_In:"Games",
+				Method_of_Contact:["Phone","Email"],
+				Planned_Use_of_Kickstarter:"Often",
+				Representative_Games: "Viewpoint\nViewpoint Reflections\nMonster Town\nNo Fish!",
+				Publisher_Website:5,
+				Profile_Updated_On:6
+		}
+		$scope.sampleDataArray = [];
+		$scope.sampleDataArray[0] = $scope.sampleData;
+
+		// $scope.sampleData = CEDATA.Publisher_Data_Input_Form[0];
+
+		//dummy data/////////////////////////////////////////////////////////////////////////////////////
+		$scope.dummyData = [
+			{
+				Publisher: "CE", 
+				Games: ["Cobras", "Dubai", "Sultana"], 
+				DateCreated: "2011",
+				AcceptingSubmissions: true,
+				Dummy: '0',
+				pic: "https://i.imgur.com/vYMdCnD.jpg",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
+
+			},
+				{
+				Publisher: "ZMAN", 
+				Games: ["Bob", "Bill", "Bill2"], 
+				DateCreated: "2012",
+				AcceptingSubmissions: true,
+				pic:"https://i.imgur.com/bQDtnrx.jpg",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
+			},
+			{
+				Publisher: "Zitnis", 
+				Games: ["BH", "CP", "HUTS"], 
+				DateCreated: "2012",
+				AcceptingSubmissions: false,
+				pic: "https://i.imgur.com/bQDtnrx.jpg",
+				"a":0,
+				"b":1,
+				"c":2,
+				"d":3,
+				"e":4,
+				"f":5,
+				"g":6
+			},
+			{
+				Publisher: "Doug", 
+				Games: ["DDG", "UNPUB"], 
+				DateCreated: "1980",
+				AcceptingSubmissions: true,
+				pic:"https://i.imgur.com/bQDtnrx.jpg",
+				"a":"0",
+				"b":"1",
+				"c":"2",
+				"d":"3",
+				"e":"4",
+				"f":"5",
+				"g":"6"
+			}
+		];
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+
+		$scope.MasterData = _.cloneDeep($scope.dummyData);
+		console.log($scope.MasterData);
+		//modal array and helper
+
+		$scope.selectedDummyData = {};
+	
+		$scope.assignSelectedDummyData = function(x){
+			$scope.selectedDummyData = $scope.MasterData[x];
+			console.log($scope.selectedDummyData);
+
+		}
+
+
+
+
+		// click button functions
+
+		function toggle(x){
+			if($scope.started == true){
+				$scope.started = false;
+			}else if ($scope.started == false){
+				$scope.started = true;
+			}
+			console.log("toggle");
+			console.log($scope.started);
+		}
+
+		function showMe(){
+			console.log($scope.dummyData);
+			toggle($scope.started);
+		}
+		$scope.showMe = showMe;
+
+
+	
+	});
+
+
+
+
+
+	</script>
+
+</body>
+</html>
