@@ -496,9 +496,7 @@
 			beforePass: false,
 			userInput: "",
 			check: function(){
-				console.log('check');
 			    $http.post("/passCheckTable", $scope.auth).then(function(response) {
-			    	console.log(response.data);
 			    	if(response.data.ready == "go"){
 			    		$scope.auth.loadingGIF = true;
 			    		$scope.dbGetData();
@@ -580,11 +578,9 @@
 
 		$scope.removeThisColumn = function(a){
 			$scope.removedColumns.push(a);
-			console.log($scope.removedColumns);
 		}
 		$scope.returnThisColumn = function(a){
 			$scope.removedColumns.splice($scope.removedColumns.indexOf(a), 1);
-			console.log($scope.removedColumns);
 		}		
 		$scope.clearSearchKeyWord = function(){
 			
@@ -640,15 +636,11 @@
 
 	    $http.get("/api/data").then(function(response) {
 	    	$scope.localJSON = response.data.Publisher_Data_Input_Form;
-	    	// console.log('response', response);
-	    	console.log('$scope.localJSON', $scope.localJSON);
 	    });
 	    
 
 	    //this will return all the db data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	    $scope.dbGetData = function(){
-
-	    	console.log("dbgetdata");
 
 		    $http.get("/api/returnDB").then(function(response) {
 		    	// console.log(response);
@@ -814,44 +806,8 @@
 				//remove that item from the object
 				delete $scope.CEdataArray[x][keyname];
 			}
-			// console.log($scope.removedObjectContents);
-			// console.log($scope.dummyData);
+
 		}
-
-		//this returns all contents from the removedObjectsContetns array to their respective objects
-		function addKey(keyname){
-
-			//iterate over all dummy data
-			for(x=0;x<$scope.CEdataArray.length;x++){
-				// console.log($scope.removedObjectContents[keyname][x]);
-
-				//return to dummydaya 0, that keyname, the value that was stored under that keyname
-				$scope.CEdataArray[x][keyname] = $scope.removedObjectContents[keyname][x];
-			}
-			//remove the temporary object key
-			delete $scope.removedObjectContents[keyname];
-			// console.log($scope.removedObjectContents);
-			// console.log($scope.dummyData);
-		}
-
-		//makes things hidden
-		function removeColumnView(x){
-			// $('.' + x).addClass("hidden");
-			// $scope.removedColumns.push(x);
-			// removeKey(x);
-		}
-
-		//reveals hidden things
-		function returnColumnView(x){
-			// $scope.removedColumns.splice($scope.removedColumns.indexOf(x), 1);
-			// $('.' + x).removeClass("hidden");
-			// console.log($scope.removedColumns);
-			// addKey(x);
-		}
-
-		$scope.returnColumnView = returnColumnView;
-		$scope.removeColumnView = removeColumnView;
-
 
 		//reorders the sorting
 		$scope.changeSortType = function (x){
@@ -859,16 +815,13 @@
 			if($scope.sortType == x && $scope.sortReverse == false){
 
 				$scope.sortReverse = true;
-				console.log('now true');
 
 			}else if ($scope.sortType == x && $scope.sortReverse == true){
 
 				$scope.sortReverse = false;
-				console.log('now false');
 
 			}else{
 				$scope.sortReverse = false;
-				console.log('doublefalse');
 			}
 
 			$scope.sortType = x;
@@ -905,7 +858,7 @@
 	
 		$scope.assignModalData = function(x){
 			$scope.selectedDummyData = $scope.CEdataArray[x];
-			console.log($scope.selectedDummyData);
+			// console.log($scope.selectedDummyData);
 
 		}
 
@@ -917,12 +870,9 @@
 			}else if ($scope.started == false){
 				$scope.started = true;
 			}
-			console.log("toggle");
-			console.log($scope.started);
 		}
 
 		function showMe(){
-			console.log($scope.dummyData);
 			toggle($scope.started);
 		}
 		$scope.showMe = showMe;
