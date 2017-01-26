@@ -30,6 +30,7 @@
 	}
 	.container{
 		width:100%;
+		height:100vh;
 	}
 	.mainColumn{
 		position:relative;
@@ -88,11 +89,11 @@
 	}
 	input{width:100%;}
 
-	body {
+/*	body {
 	    padding-bottom: 50px;
-	}
+	}*/
 	.mainRow{
-		margin-bottom:80px
+		/*margin-bottom:80px*/
 	}
 	.categoryButtons{
 		width:100%;
@@ -104,6 +105,8 @@
 		margin-top:10px;
 		width:100%;
 	}
+	.red{color:red;}
+	.black{color:black;}
 	.btn-default:active{
 		background-color: red;
 	}
@@ -134,9 +137,14 @@
 	.mt10{
 		margin-top: 10px;
 	}
+/*	div{
+		border-color:black;
+		border-width:1px;
+		border-style:solid;
+	}*/
 	@media only screen and (max-width: 900px) {
 		.mainRow{
-			margin-bottom:180px;
+			/*margin-bottom:180px;*/
 		}
 	}
 	</style>
@@ -151,30 +159,40 @@
 		<div class="row mainRow" style="">
 
 		<!-- //padding div -->
-			<div class="col col-md-2" >
-				<div class="mt10"
-				>
-					<image 
-					src="assets/CElogo.jpeg"
-					height="70px" 
-					style="border-style:solid;border-width:1px;border-color:black;padding:0px;border-radius:50%;">
-					<!-- <span>Click to Login</span> -->
+			<div class="col col-md-3" >
+
+				<div style="height:20vh;">
+
+					<div class="mt10"
+					>
+						<image 
+						src="assets/CElogo.jpeg"
+						height="80" width="80" 
+						style="border-style:solid;border-width:1px;border-color:black;padding:0px;border-radius:50%;float:left;"/>
+						<!-- <span>Click to Login</span> -->
+
+						<div style="height:20%;float:right;margin-bottom:10px;"class="btn btn-warning" ng-class="{invisible:!auth.success}" >
+							<input style="color:black;" ng-model="auth.newPub" placeholder="New Publisher Name">
+							<h4 ng-click="auth.createNewPub(auth.newPub)">Create New Publisher</h4>
+						</div>
+
+					</div>
+
+					<div>
+						<input ng-model="searchKeyWord.PublisherName" placeholder="Search Name...">
+					</div>
+
+					<div 
+					class="btn btn-success" 
+					style="width:100%;"				
+					data-toggle="modal" 
+					data-target="#myModal2">
+						{{auth.titleButton}}
+					</div>
 
 				</div>
 
-				<div>
-					<input ng-model="searchKeyWord.PublisherName" placeholder="Search Name...">
-				</div>
-
-				<div 
-				class="btn btn-success" 
-				style="width:100%;"				
-				data-toggle="modal" 
-				data-target="#myModal2">
-					{{auth.titleButton}}
-				</div>
-
-				<div style="overflow-y:scroll;overflow-x:hidden;height:800px;">
+				<div style="overflow-y:scroll;overflow-x:hidden;height:80vh;">
 
 					<div 
 						class="btn pubBtn" 
@@ -186,12 +204,14 @@
 
 				</div>
 
+
+
 			</div>
 
 		<!-- main body -->
-			<div class="col col-md-8 mainColumn">
+			<div class="col col-md-9 mainColumn">
 
-				<div class="jumbotron j2 noMargin">
+<!-- 				<div class="jumbotron j2 noMargin">
 
 					<h1>Publisher Form</h1>
 
@@ -202,12 +222,8 @@
 					<button ng-click="getEntry(nameAndPass)" class="btn btn-primary retrieve">Retrieve Publisher Account</button>
 
 					<a href="mailto:cardboardedison@gmail.com" target="_top">Problem? Contact CardBoard Edison!</a>
-					<!-- {{nameAndPass}} -->
 
-
-					
-					<!-- <button ng-click="submitNewEntry()" class="btn btn-primary submit" data-toggle="modal" data-target="#myModal">SUBMIT</button> -->
-				</div>
+				</div> -->
 
 				<div class="row centerAlign titleRow">
 					<div class="btn btn-success titleButton"><h2 class="noMargin ">Currently Editing: <span style="color:black;">{{CEdataObject.PublisherName}}</span></h2>
@@ -232,7 +248,12 @@
 						
 						<h3>{{show.currentField}}</h3>
 						<h4>{{comment[show.currentField]}}</h4>
-						<textarea ng-if="CEdataObject.PublisherName" class="TArea"ng-model="CEdataObject[show.currentField]"></textarea>
+						<span 
+							ng-if="CEdataObject.PublisherName" 
+							ng-class="databaseSizes.returnRed(databaseSizes.evalLength(CEdataObject[show.currentField]), databaseSizes[show.currentField])" >
+							Max characters: {{databaseSizes.evalLength(CEdataObject[show.currentField])}} of {{databaseSizes[show.currentField]}}
+						</span>
+						<textarea style="height:100px;" ng-if="CEdataObject.PublisherName" class="TArea"ng-model="CEdataObject[show.currentField]"></textarea>
 
 						<div class="row">
 
@@ -286,24 +307,9 @@
 
 				</div>
 
-				
-				
-			
-			</div>
-
-			<div class="col col-md-2 mt10">
-
-			
-				<div class="btn btn-warning" ng-class="{invisible:!auth.success}" >
-					<input style="color:black;" ng-model="auth.newPub" placeholder="New Publisher Name">
-					<h4 ng-click="auth.createNewPub(auth.newPub)">Create New Publisher</h4>
-				</div>
-
 			</div>
 
 		</div>
-
-
 
 	</div>
 
@@ -327,7 +333,7 @@
 
 				<!-- list of items in push object -->
 					<ul ng-repeat="(key, value) in CEdataObject" ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated','PublisherName'])">
-						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
+						<p ng-class="databaseSizes.returnRed(databaseSizes.evalLength(value), databaseSizes[key])"><strong>{{key}}: </strong><span>{{value}}</span></p>
 					</ul>
 
 				</div>
@@ -336,7 +342,7 @@
 
 					<!--  -->
 
-					<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:left;" ng-click="submitUpdatedEntry(CEdataObject)">Click Here</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:left;" ng-click="submitUpdatedEntry(CEdataObject)">Submit  Update</button>
 					<h6 style="float:left; margin-left: 5px;"> To Permanently Change Your Entry</h6>
 					<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:right;">Close Window</button>
 				</div>
@@ -362,9 +368,9 @@
 
 				<div class="modal-body">
 
-				<h3>Password:</h3>
+					<h3>Password:</h3>
 
-				<input ng-model="auth.userInput">
+					<input ng-model="auth.userInput">
 
 				</div>
 
@@ -379,12 +385,53 @@
 
 	</div>
 
-	<!-- {console.log($scope.bookmarks)} -->
-
 	<script type="text/javascript">
 		
 	//initializes the module, and then controller
 	angular.module('CEINPUT', []).controller("MainCTRL", function($scope , $http){
+
+		$scope.databaseSizes = {
+			  PublisherName : 60,
+			  Website: 90,
+			  BGGpage: 120,
+			  Country: 60,
+			  RepresentativeGames: 500,
+			  CatalogSize:7,
+			  Kickstarter : 30,
+			  Submissions: 5,
+			  CategoriesOfInterest : 240,
+			  InterestedIn : 1200,
+			  ContactMethod: 120,
+			  ContactInfo: 60,
+			  RecentlyUpdated: 24,
+			  PubPassword: 45,
+			  Viewable: 1,
+			  returnRed: function(currentField,dbSize){			  	
+
+			  	if(currentField <= dbSize){
+
+			  		return "black";
+
+			  	}else{
+
+			  		return "red";
+			  	}
+
+			  },
+			  evalLength: function(x){
+
+			  	if(typeof x == "number"){
+		  			x = x.toString();
+		  		}
+
+			  	if(typeof x != "string"){
+			  		return 0;
+			  	}
+
+			  	return x.length;
+			  }
+		}
+
 		//super important empty object
 		$scope.CEdataObject = {};
 
@@ -399,11 +446,8 @@
 
 				if(x.PublisherName == reply){
 
-					console.log(x.idPublisherDirectory);
-
 					var tempObject = {idPublisherDirectory:x.idPublisherDirectory}
 
-					console.log(tempObject);
 
 					$http.post("/api/deletePublisher", tempObject).then(function(response) {
 
@@ -447,14 +491,14 @@
 		$scope.show={
 			currentField: "",
 			setField: function(x){
-				console.log(x);
+
 				$scope.show.currentField = x;
-				console.log($scope.CEdataobject)
+
 			}
 		}
 
 		$scope.auth={
-			userInput: "Iamnotababysitter",
+			userInput: "",
 			success: false,
 			newPub: "",
 			titleButton: "Login",
@@ -470,7 +514,7 @@
 				}
 
 			    $http.post("/api/newPublisher", tempObject).then(function(response) {
-			    	console.log(response.data);
+
 			    	if(response.data.ready == "go"){
 			    		getAllPubs();
 			    		$scope.auth.newPub = "";
@@ -480,9 +524,9 @@
 
 			},
 			check: function(){
-				console.log('check');
+
 			    $http.post("/passCheckMaster", $scope.auth).then(function(response) {
-			    	console.log(response.data);
+
 			    	if(response.data.ready == "go"){
 			    		getAllPubs();
 			    		$scope.auth.success=true;
@@ -495,11 +539,9 @@
 		$scope.allPublishers = [];
 
 		function getAllPubs(){
-			console.log('getallpubs');
+
 		    $http.post("/api/returnMasterDB", $scope.auth).then(function(response) {
 
-		    	console.log(response);
-		    	// $scope.allPublishers = [];
 	 			$scope.allPublishers = response.data;
 
 			});
@@ -513,7 +555,7 @@
 			CatalogSize:"Approximately how many games you have published. ",
 			RepresentativeGames:"What games in your catalog best represent what you are looking for?",
 			Kickstarter:"Will you be running Kickstarters in the future? Yes/No/Maybe",
-			Submissions:"Are you accepting new submissions? Yes/No",
+			Submissions:"Are you accepting new submissions? Yes/No/Maybe",
 			CategoriesOfInterest:"What broad games categories are you most interested in?",
 			InterestedIn:"Write a little more about what you are interested in, here.",
 			ContactMethod:"Best methods for interested designers to contact you.",
@@ -525,8 +567,7 @@
 		}
 
 		$scope.evaluateThis=function(a, b){
-			// console.log(typeof b);
-			// console.log(b);
+
 			if(typeof b == 'object' && b.indexOf(a) >=0){
 					return false;
 			}else{
@@ -535,28 +576,6 @@
 				}
 			}
 			return true;
-		}
-
-		$scope.isPublisherName = function(a){
-			if (a == "PublisherName"){
-				return true;
-			}else{return false;}
-		}
-		$scope.isPubPassword = function(a){
-			if (a == "PubPassword"){
-				return true;
-			}else{return false;}
-		}
-		$scope.isNeither = function(a){
-			if(!$scope.isPublisherName(a) && !$scope.isPubPassword(a)){
-				return true;
-			}else{return false;}
-		}
-
-		$scope.lockStock = function(a){
-			if($scope.lock = true && (a == "PublisherName" || a == "PubPassword")){
-				return true;
-			}else{return false;}
 		}
 
 		// ============================================================================
@@ -571,8 +590,6 @@
 
 	    	$http.post("/api/getSingle", PassObject).then(function(response) {
 
-	    		console.log("response.data", response);
-
 	    		$scope.CEdataObject = response.data;
 
 	    		for(key in $scope.CEdataObject){
@@ -580,7 +597,7 @@
 	    		}
 
 	    		if(!$scope.CEdataObject.ERROR){
-	    			console.log("NewPassword");
+
 		    		$scope.CEdataObject.NewPassword = "";
 	    		}
 
@@ -589,32 +606,36 @@
 
 		//update your entry++++++++++++++++++++++++++++++++++++++++
 		$scope.submitUpdatedEntry = function(PassObject){
-			console.log('bob');
+
+			console.log(PassObject);
+
 			var p2 = PassObject;
+
+			//check data
+			for(x in PassObject){
+
+				var temp = PassObject[x];
+				//is number? make string
+				if(typeof temp == "number"){
+					temp = temp.toString();
+				}
+				//is not string? make blank string
+				if(typeof temp != "string"){
+					PassObject[x] = "";
+				}
+				//check if too long
+				if(temp.length > $scope.databaseSizes[x]){
+					alert("Incorrect field length");
+					return null;
+				}
+			}
+
 			$http.post("/api/updateSingle", PassObject).then(function(response){
-				console.log(response);
-				console.log("$scope.getEntry(PassObject");
+
 				$scope.getEntry(p2);
 
 			});
 		}
-
-		// $scope.currentObject = {
-		// 	"Publisher Name": "Cardboard Edison",
-		// 	"Publisher Website": "cardboardedison.com",
-		// 	"BoardGameGeek Page": "http://boardgamegeek.com/boardgamepublisher/33169/cardboard-edison",
-		// 	"Country": "USA",
-		// 	"Catalog Size": 1,
-		// 	"Representative Games": "Cobras",
-		// 	"Planned use of Kickstarter": "Always/Frequently",
-		// 	"Accepting Submissions": "no",
-		// 	"Categories of Interest": ["Dice", "Thematic", "Micro", "Board", "Gateway", "Card", "Family", "Social", "Euro"],
-		// 	"Interested in": "Games with unique mechanics and themes",
-		// 	"Contact Info": "cardboardedison@gmail.com",
-		// 	"Profile Updated On": "12-Oct-2016"
-		// };
-
-		//========================================
 
 		function RANDOM(x){
 			return Math.floor(Math.random() * (x + 1))

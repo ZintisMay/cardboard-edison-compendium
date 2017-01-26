@@ -494,7 +494,7 @@
 		$scope.auth={
 			loadingGIF: false,
 			beforePass: false,
-			userInput: "Designer16",
+			userInput: "",
 			check: function(){
 				console.log('check');
 			    $http.post("/passCheckTable", $scope.auth).then(function(response) {

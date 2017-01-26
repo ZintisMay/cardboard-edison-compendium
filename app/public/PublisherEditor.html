@@ -104,12 +104,41 @@
 		margin-top:10px;
 		width:100%;
 	}
+	.red{color:red;}
+	.black{color:black;}
 	.btn-default:active{
 		background-color: red;
 	}
+	.titleName{
+		position:absolute;
+		bottom:0px;
+		width:20%;
+		left:40%;
+	}
+	.noMargin{
+		margin:0px;
+	}
+	.centerAlign{
+		text-align: center;
+	}
+	.titleRow{
+		margin: 2px 1px 2px 1px;
+	}
+	.titleButton{
+		width:100%;
+	}
+	.pubBtn{
+		width:100%;
+	}
+	.invisible{
+		visibility: hidden;
+	}
+	.mt10{
+		margin-top: 10px;
+	}
 	@media only screen and (max-width: 900px) {
 		.mainRow{
-			margin-bottom:180px;
+			/*margin-bottom:180px;*/
 		}
 	}
 	</style>
@@ -138,14 +167,19 @@
 					<input ng-model="nameAndPass.PublisherName" placeholder="Enter Publisher Name..."></input>
 					<input ng-model="nameAndPass.PubPassword" placeholder="Enter Publisher Password..."></input>
 
-						<button ng-click="getEntry(nameAndPass)" class="btn btn-primary retrieve">Retrieve Publisher Account</button>
+					<button ng-click="getEntry(nameAndPass)" class="btn btn-primary retrieve">Retrieve Publisher Account</button>
 
-						<a href="mailto:cardboardedison@gmail.com" target="_top">Problem? Contact CardBoard Edison!</a>
+					<a href="mailto:cardboardedison@gmail.com" target="_top">Problem? Contact CardBoard Edison!</a>
 						<!-- {{nameAndPass}} -->
 
 
 
 					<!-- <button ng-click="submitNewEntry()" class="btn btn-primary submit" data-toggle="modal" data-target="#myModal">SUBMIT</button> -->
+				</div>
+				
+				<div class="row centerAlign titleRow">
+					<div class="btn btn-success titleButton"><h2 class="noMargin ">Currently Editing: <span style="color:black;">{{CEdataObject.PublisherName}}</span></h2>
+					</div>
 				</div>
 
 				<div class="row">
@@ -157,8 +191,6 @@
 
 						class="btn categoryButtons btn-default" 
 
-
-
 						ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated', 'Viewable'])" 
 
 						ng-click="show.setField(key)">{{key}}</div>
@@ -166,20 +198,59 @@
 
 					<div class="col col-sm-9">
 						<h3>{{show.currentField}}</h3>
-						<h4>{{comment[show.currentField]}}</h4>
-						<textarea ng-if="CEdataObject.PublisherName" class="TArea"ng-model="CEdataObject[show.currentField]"></textarea>
+						<h4>{{comment[show.currentField]}}</h4>						
+						<span 
+							ng-if="CEdataObject.PublisherName" 
+							ng-class="databaseSizes.returnRed(databaseSizes.evalLength(CEdataObject[show.currentField]), databaseSizes[show.currentField])" >
+							Max characters: {{databaseSizes.evalLength(CEdataObject[show.currentField])}} of {{databaseSizes[show.currentField]}}
+						</span>
+						<textarea style="height:100px;" ng-if="CEdataObject.PublisherName" class="TArea"ng-model="CEdataObject[show.currentField]"></textarea>
 
 						<div class="row">
-							<div class="col col-sm-4" style="text-align: left;">						
-								<button ng-if="CEdataObject.PublisherName" ng-click="submitNewEntry()" class="btn btn-primary updateButton" data-toggle="modal" data-target="#myModal" style="">Review and Submit</button>
+
+							<div class="col col-sm-3" style="text-align: left;">						
+								<button 
+								ng-if="CEdataObject.PublisherName" 
+								ng-click="submitNewEntry()" 
+								class="btn btn-success updateButton" 
+								data-toggle="modal" 
+								data-target="#myModal" 
+								style="">
+									Review and Submit
+								</button>
+
 							</div>
-							<div class="col col-sm-4" style="text-align: middle;">
-								<button ng-if="CEdataObject.PublisherName" ng-click="revertToOldEntry(show.currentField)" class="btn btn-warning updateButton"  >Revert Entry to Previous</button>
-						</div>
-							<div class="col col-sm-4" style="text-align: right;">						
-								<button ng-if="CEdataObject.PublisherName" ng-click="revertALL()" class="btn btn-danger updateButton">Revert All Changes</button>
+
+							<div class="col col-sm-3" style="text-align: middle;">
+
+								<button 
+								ng-if="CEdataObject.PublisherName" 
+								ng-click="revertToOldEntry(show.currentField)" 
+								class="btn btn-primary updateButton">
+									Undo Field
+								</button>
+
 							</div>
-						</div>
+
+							<div class="col col-sm-3" style="text-align: right;">						
+								<button 
+									ng-if="CEdataObject.PublisherName" 
+									ng-click="revertALL()" 
+									class="btn btn-warning updateButton">
+									Undo All
+								</button>
+
+							</div>
+
+							<div class="col col-sm-3" style="text-align: right;">						
+								<button 
+								ng-if="CEdataObject.PublisherName" 
+								class="btn btn-danger updateButton" 
+								ng-click="deletePub.deleteCurrent(CEdataObject)">
+									DELETE
+								</button>
+
+							</div>
 
 
 
@@ -224,7 +295,7 @@
 
 				<!-- list of items in push object -->
 					<ul ng-repeat="(key, value) in CEdataObject" ng-if="evaluateThis(key,['idPublisherDirectory','RecentlyUpdated','PublisherName'])">
-						<p><strong>{{key}}: </strong><span>{{value}}</span></p>
+						<p ng-class="databaseSizes.returnRed(databaseSizes.evalLength(value), databaseSizes[key])"><strong>{{key}}: </strong><span>{{value}}</span></p>
 					</ul>
 
 				</div>
@@ -250,10 +321,67 @@
 		
 	//initializes the module, and then controller
 	angular.module('CEINPUT', []).controller("MainCTRL", function($scope , $http){
+
+		$scope.databaseSizes = {
+			  PublisherName : 60,
+			  Website: 90,
+			  BGGpage: 120,
+			  Country: 60,
+			  RepresentativeGames: 500,
+			  CatalogSize:7,
+			  Kickstarter : 30,
+			  Submissions: 5,
+			  CategoriesOfInterest : 240,
+			  InterestedIn : 1200,
+			  ContactMethod: 120,
+			  ContactInfo: 60,
+			  RecentlyUpdated: 24,
+			  PubPassword: 45,
+			  Viewable: 1,
+			  returnRed: function(currentField,dbSize){			  	
+
+			  	if(currentField <= dbSize){
+
+			  		return "black";
+
+			  	}else{
+
+			  		return "red";
+			  	}
+
+			  },
+			  evalLength: function(x){
+
+			  	if(typeof x == "number"){
+			  		x = x.toString();
+			  	}
+			  	return x.length;
+			  }
+		}
+
 		//super important empty object
 		$scope.CEdataObject = {};
 
 		$scope.CEdataObjectBackUp = {};
+
+		$scope.deletePub = {
+			deleteCurrent: function(x){
+
+				var reply = prompt("You are about to delete this Publisher Entry. If you are prepared to do that, please type their name:");
+
+				if(x.PublisherName == reply){
+
+					var tempObject = {idPublisherDirectory:x.idPublisherDirectory}
+
+					$http.post("/api/deletePublisher", tempObject).then(function(response) {
+
+						getAllPubs();
+
+					});
+
+				}
+			}
+		}
 
 		$scope.revertToOldEntry = function(x){
 			console.log(x,$scope.CEdataObject[x], $scope.CEdataObjectBackUp[x] );
@@ -307,28 +435,6 @@
 			return true;
 		}
 
-		$scope.isPublisherName = function(a){
-			if (a == "PublisherName"){
-				return true;
-			}else{return false;}
-		}
-		$scope.isPubPassword = function(a){
-			if (a == "PubPassword"){
-				return true;
-			}else{return false;}
-		}
-		$scope.isNeither = function(a){
-			if(!$scope.isPublisherName(a) && !$scope.isPubPassword(a)){
-				return true;
-			}else{return false;}
-		}
-
-		$scope.lockStock = function(a){
-			if($scope.lock = true && (a == "PublisherName" || a == "PubPassword")){
-				return true;
-			}else{return false;}
-		}
-
 		// ============================================================================
 
 		$scope.nameAndPass = {
@@ -341,18 +447,14 @@
 
 	    	$http.post("/api/getSingle", PassObject).then(function(response) {
 
-	    		console.log("response.data", response);
-
 	    		$scope.CEdataObject = response.data;
 
 	    		for(key in $scope.CEdataObject){
 	    			$scope.CEdataObjectBackUp[key] = $scope.CEdataObject[key];
 	    		}
 
-	    		//I think this makes the newpassword field
-
 	    		// if(!$scope.CEdataObject.ERROR){
-	    		// 	console.log("NewPassword");
+
 		    	// 	$scope.CEdataObject.NewPassword = "";
 	    		// }
 
@@ -361,30 +463,36 @@
 
 		//update your entry++++++++++++++++++++++++++++++++++++++++
 		$scope.submitUpdatedEntry = function(PassObject){
-			console.log('bob');
+
+			console.log(PassObject);
+
 			var p2 = PassObject;
+
+			//check data
+			for(x in PassObject){
+
+				var temp = PassObject[x];
+				//is number? make string
+				if(typeof temp == "number"){
+					temp = temp.toString();
+				}
+				//is not string? make blank string
+				if(typeof temp != "string"){
+					PassObject[x] = "";
+				}
+				//check if too long
+				if(temp.length > $scope.databaseSizes[x]){
+					alert("Incorrect field length");
+					return null;
+				}
+			}
+
 			$http.post("/api/updateSingle", PassObject).then(function(response){
-				console.log(response);
-				console.log("$scope.getEntry(PassObject");
+
 				$scope.getEntry(p2);
 
 			});
 		}
-
-		// $scope.currentObject = {
-		// 	"Publisher Name": "Cardboard Edison",
-		// 	"Publisher Website": "cardboardedison.com",
-		// 	"BoardGameGeek Page": "http://boardgamegeek.com/boardgamepublisher/33169/cardboard-edison",
-		// 	"Country": "USA",
-		// 	"Catalog Size": 1,
-		// 	"Representative Games": "Cobras",
-		// 	"Planned use of Kickstarter": "Always/Frequently",
-		// 	"Accepting Submissions": "no",
-		// 	"Categories of Interest": ["Dice", "Thematic", "Micro", "Board", "Gateway", "Card", "Family", "Social", "Euro"],
-		// 	"Interested in": "Games with unique mechanics and themes",
-		// 	"Contact Info": "cardboardedison@gmail.com",
-		// 	"Profile Updated On": "12-Oct-2016"
-		// };
 
 	});
 

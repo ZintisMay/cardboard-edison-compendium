@@ -255,19 +255,14 @@ module.exports = function(app){
 
 	app.post('/api/newPublisher', function(req, res){
 
-		console.log("you made a new publisher");
-
-		console.log(req.body);
-
 		var post = req.body;
 		post.PubPassword = req.body.PublisherName;
-
-		console.log(post);
 
 		var queryString1 = "SELECT * FROM " + a + (b?".":"") + b + " WHERE PublisherName = \"" + req.body.PublisherName + "\"";	
 
 		//check to make sure there was something entered
 		if(typeof req.body.PublisherName == "string"){
+
 			//check to see if it exists
 			connection.query(queryString1, function(err, result){
 				if(err) throw err;
@@ -291,12 +286,9 @@ module.exports = function(app){
 
 	});
 
+
 	app.post('/api/populateDB', function(req, res){
 
-		// console.log('populateDB');
-
-		// console.log("req", req);
-		// console.log("req.body", req.body);
 		// pushAll("`gsw3abjc36mo6i91`","`PublisherDirectory`", databaseItemArray, bobAccount);
 		res.json({"You":"Did it!"});
 
@@ -305,15 +297,12 @@ module.exports = function(app){
 		connection.query("INSERT INTO " +a + (b?".":"") + b + " SET ?", post, function(err, result){
 			if(err) throw err;
 
-			// console.log(result);
 		});
 
 	});
 
+	//password check
 	app.post('/api/checkPW', function(req, res){
-		// console.log(req.body);
-		// console.log(req.body.PublisherName);
-		// console.log(req.body.PubPassword);
 
 		res = checkPW(a, b, req.body.PublisherName, req.body.PubPassword);
 	});

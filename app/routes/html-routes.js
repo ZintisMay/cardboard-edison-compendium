@@ -13,8 +13,12 @@ module.exports = function(app){
 
 	// Each of the below routes just handles the HTML page that the user gets sent to.
 	app.get('/', function(req, res){
-		res.sendFile(path.join(__dirname + '/../public/index.html'));
+		res.sendFile(path.join(__dirname + '/../public/Table.html'));
 	});
+
+	// app.get('/index', function(req, res){
+	// 	res.sendFile(path.join(__dirname + '/../public/indexx.html'));
+	// });
 
 	// table password check
 	app.post('/passCheckTable', function(req, res){
@@ -36,33 +40,11 @@ module.exports = function(app){
 		}
 	})
 
-	// app.get('/CEangularTable', function(req, res){
-	// 	res.sendFile(path.join(__dirname + '/../public/CEangularTable.html'));
-	// });
-
-	// app.get('/jsontest', function(req, res){
-	// 	res.sendFile(path.join(__dirname + '/../public/jsontest.html'));
-	// });
-
-	// app.get('/CEangularNewCompany', function(req, res){
-	// 	res.sendFile(path.join(__dirname + '/../public/CEangularNewCompany.html'));
-	// });
-
 	app.get('/Table', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/Table.html'));
 	});
 
-	// app.get('/Table2', function(req, res){
-	// 	res.sendFile(path.join(__dirname + '/../public/Table2.html'));
-	// });
 
-	// app.get('/Table3', function(req, res){
-	// 	res.sendFile(path.join(__dirname + '/../public/Table3.html'));
-	// });
-
-	// app.get('/NewPublisher', function(req, res){
-	// 	res.sendFile(path.join(__dirname + '/../public/NewPublisher.html'));
-	// });
 
 	app.get('/PublisherEditor', function(req, res){
 		res.sendFile(path.join(__dirname + '/../public/PublisherEditor.html'));

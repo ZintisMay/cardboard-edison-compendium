@@ -62,7 +62,12 @@
 
 	</div>
 
-	<div class="col col-lg-3"></div>
+	<div class="col col-lg-3">
+		
+	<button ng-click="testLogin('z', '1')">testLogin('z', '1')</button>
+
+
+	</div>
 </div>
 <script type="text/javascript">
 
@@ -78,6 +83,21 @@
 			console.log(PassObject);
 			$http.post("/testEnd", PassObject).then(function(response) {
 				$location.path('/jsontest');
+	    		console.log("response.data", response.data);
+
+    		});
+		}
+
+		$scope.testLogin = function(p1, p2){
+
+			var string = "/pw";
+
+			string += "/" + p1;
+			string += "/" + p2;
+
+			console.log(string);
+
+			$http.get(string).then(function(response) {
 	    		console.log("response.data", response.data);
 
     		});
