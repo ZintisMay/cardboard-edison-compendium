@@ -260,7 +260,6 @@
 							<div class="col col-sm-3" style="text-align: left;">						
 								<button 
 								ng-if="CEdataObject.PublisherName" 
-								ng-click="submitNewEntry()" 
 								class="btn btn-success updateButton" 
 								data-toggle="modal" 
 								data-target="#myModal" 
@@ -614,20 +613,24 @@
 			//check data
 			for(x in PassObject){
 
+				console.log(PassObject[x]);
+
 				var temp = PassObject[x];
 				//is number? make string
-				if(typeof temp == "number"){
-					temp = temp.toString();
+				if(typeof PassObject[x] == "number"){
+					PassObject[x] = PassObject[x].toString();
 				}
 				//is not string? make blank string
-				if(typeof temp != "string"){
+				if(typeof PassObject[x] != "string" || typeof PassObject[x] == "null"){
 					PassObject[x] = "";
 				}
+				console.log(PassObject[x]);
 				//check if too long
-				if(temp.length > $scope.databaseSizes[x]){
+				if(PassObject[x].length > $scope.databaseSizes[x]){
 					alert("Incorrect field length");
 					return null;
 				}
+
 			}
 
 			$http.post("/api/updateSingle", PassObject).then(function(response){

@@ -18,6 +18,12 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+	<!-- twitter social -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css" crossorigin="anonymous">
+
+	<!-- font awesome -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -172,6 +178,20 @@
 		display:block;
 
 	}
+	.linkBTNs{
+		/*background-color: #ffffff;*/
+		/*opacity:.1;*/
+		margin:0px;
+		padding:0px;
+
+		font-size:30px;
+	}
+	.linkSPAN{
+		margin:0px;
+		padding:0px;
+		color:#D3D3D3;
+		width:30px;
+	}
 	
 	@media only screen and (min-width: 731px){
 		.rightAlign{
@@ -216,6 +236,7 @@
 
 	<div class="stickyTop bannerImage">
 
+
 			<!-- <button ng-click="" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Modal</button> -->
 
 			<!-- <button class="btn" ng-click="showMe(started)" ng-class="{'btn-primary': started, 'btn-danger': !started}">click</button> -->
@@ -226,9 +247,7 @@
 
 			<!-- <button ng-click="dbGetData()" class="btn btn-primary">dbGetData</button> -->
 
-				<img src="assets/CElogo.jpeg" height="70px" style="border-style:solid;border-width:1px;border-color:black;padding:0px;border-radius:50%;"></img>
-				
-				<!-- <img class="compendium" src="GOLDcompendium.png"> -->
+				<img src="assets/CElogo.jpeg" height="80px" style="margin:0px;padding:0px;"></img>
 
 				<h1 style="
 				color:orange;
@@ -274,6 +293,30 @@
 				data-target="#myModal2" >modal2</div> -->
 
 <!-- 				<button class="removalButtons btn btn-success" ng-repeat="key in removedColumns" ng-click="returnThisColumn(key)">{{key}}</button> -->
+
+						<div class="panel panel-default" style="margin:10px;padding:3px;float:right;">
+
+							<a href="https://twitter.com/CardboardEdison" target="_blank" class="btn linkBTNs">
+							  <span class="fa fa-twitter linkSPAN"></span>
+							</a>
+
+							<a href="https://www.facebook.com/cardboardedison" target="_blank" class="btn  linkBTNs">
+							  <span class="fa fa-facebook  linkSPAN"></span>
+							</a>
+
+							<a href="https://www.instagram.com/cardboardedison/" target="_blank" class="btn  linkBTNs">
+							  <span class="fa fa-instagram  linkSPAN"></span>
+							</a>
+
+							<a href="http://cardboardedison.tumblr.com/" target="_blank" class="btn  linkBTNs">
+							  <span class="fa fa-tumblr  linkSPAN"></span>
+							</a>
+
+							<a href="mailto:cardboardedison@gmail.com" target="_blank" class="btn  linkBTNs">
+							  <span class="glyphicon glyphicon-envelope linkSPAN">
+							</a>
+
+						</div>
 
 	</div>
 
@@ -490,6 +533,14 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 		var colorToggle = false;
+
+		$scope.buttons = {
+			facebook: "facebook",
+			instagram: "instagram",
+			tumblr: "tumblr",
+			twitter: "twitter",
+			mail: "mail"
+		}
 
 		$scope.auth={
 			loadingGIF: false,
